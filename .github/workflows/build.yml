@@ -1,21 +1,28 @@
 name: Build APK
-on: [workflow_dispatch] # Esto activa un botón para compilar cuando quieras
+on: [workflow_dispatch]
 
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.1
+        uses: microsoft/setup-msbuild@v2
+        
       - name: Setup NuGet
-        uses: nuget/setup-nuget@v1
+        uses: nuget/setup-nuget@v2
+
       - name: Restore Packages
         run: nuget restore PKHeX.Mobile.sln
+
       - name: Build Android
-        run: msbuild PKHeX.Mobile.Android/PKHeX.Mobile.Android.csproj /p:Configuration=Release /t:PackageForAndroid
+        # He añadido parámetros para asegurar que genere el archivo final correctamente
+        run: msbuild PKHeX.Mobile.Android/PKHeX.Mobile.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true
+
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PKHeX-Classic-APK
-          path: PKHeX.Mobile.Android/bin/Release/*.apk
+          # Esta ruta busca cualquier APK generado en la carpeta de salida
+          path: PKHeX.Mobile.Android/bin/Release/*-Signed.apk
