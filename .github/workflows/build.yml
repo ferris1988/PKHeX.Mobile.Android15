@@ -3,7 +3,8 @@ on: [workflow_dispatch]
 
 jobs:
   build:
-    runs-on: windows-2019
+    # Cambiamos a windows-2022 que tiene Visual Studio 2022 y entiende Android 13/14/15
+    runs-on: windows-2022 
     steps:
       - uses: actions/checkout@v4
       
@@ -17,6 +18,7 @@ jobs:
         run: nuget restore PKHeX.Mobile.sln
 
       - name: Build Android
+        # Usamos la ruta corregida que verificamos antes
         run: msbuild PKHeX.Android/PKHeX.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true
 
       - name: Upload APK
