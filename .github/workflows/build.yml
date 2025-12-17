@@ -17,12 +17,11 @@ jobs:
         run: nuget restore PKHeX.Mobile.sln
 
       - name: Build Android
-        # Hemos simplificado el comando eliminando las rutas que daban error
-        run: msbuild PKHeX.Mobile.Android/PKHeX.Mobile.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true
+        # Corregida la ruta a PKHeX.Android/PKHeX.Android.csproj
+        run: msbuild PKHeX.Android/PKHeX.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PKHeX-Classic-APK
-          # Buscamos cualquier APK que se haya generado, firmado o no
-          path: PKHeX.Mobile.Android/bin/Release/*.apk
+          path: PKHeX.Android/bin/Release/*.apk
