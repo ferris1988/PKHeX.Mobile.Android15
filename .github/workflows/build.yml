@@ -17,12 +17,13 @@ jobs:
         run: nuget restore PKHeX.Mobile.sln
 
       - name: Build Android
-        # He añadido parámetros para asegurar que genere el archivo final correctamente
-        run: msbuild PKHeX.Mobile.Android/PKHeX.Mobile.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true
+        # He añadido /p:DesignTimeBuild=false para evitar errores de licencias visuales
+        run: msbuild PKHeX.Mobile.Android/PKHeX.Mobile.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true /p:DesignTimeBuild=false /p:AndroidSdkDirectory="C:\Microsoft\AndroidSDK\25"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PKHeX-Classic-APK
-          # Esta ruta busca cualquier APK generado en la carpeta de salida
-          path: PKHeX.Mobile.Android/bin/Release/*-Signed.apk
+          path: |
+            PKHeX.Mobile.Android/bin/Release/*.apk
+            PKHeX.Mobile.Android/bin/Release/*.aab
