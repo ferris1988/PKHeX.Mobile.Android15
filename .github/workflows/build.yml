@@ -3,7 +3,7 @@ on: [workflow_dispatch]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2019 # Usamos una versión de Windows más compatible con Xamarin viejo
     steps:
       - uses: actions/checkout@v4
       
@@ -17,13 +17,12 @@ jobs:
         run: nuget restore PKHeX.Mobile.sln
 
       - name: Build Android
-        # He añadido /p:DesignTimeBuild=false para evitar errores de licencias visuales
-        run: msbuild PKHeX.Mobile.Android/PKHeX.Mobile.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true /p:DesignTimeBuild=false /p:AndroidSdkDirectory="C:\Microsoft\AndroidSDK\25"
+        run: msbuild PKHeX.Mobile.Android/PKHeX.Mobile.Android.csproj /p:Configuration=Release /t:SignAndroidPackage /p:AndroidBuildApplicationPackage=true /p:AndroidSdkDirectory="C:\Microsoft\AndroidSDK\25" /p:JavaSdkDirectory="$(JavaSdkDirectory_8_x64)"
+        # Usamos Java 8 y el SDK 25 que es lo que este proyecto antiguo entiende mejor
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PKHeX-Classic-APK
-          path: |
-            PKHeX.Mobile.Android/bin/Release/*.apk
-            PKHeX.Mobile.Android/bin/Release/*.aab
+          path: PKHeX.Mobile.Android/bin/Release/*-Signed.apk
+          if-no-files-found: warn
