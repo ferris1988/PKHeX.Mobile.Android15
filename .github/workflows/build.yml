@@ -17,8 +17,7 @@ jobs:
         run: nuget restore PKHeX.Mobile.sln
 
       - name: Build Android
-        # Forzamos v13.0 para que el compilador no se bloquee, funcionará igual en Android 15
-        run: msbuild PKHeX.Android/PKHeX.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true /p:TargetFrameworkVersion=v13.0
+        run: msbuild PKHeX.Android/PKHeX.Android.csproj /p:Configuration=Release /t:PackageForAndroid /p:AndroidBuildApplicationPackage=true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
